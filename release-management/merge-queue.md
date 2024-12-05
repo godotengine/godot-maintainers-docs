@@ -54,49 +54,20 @@ The process to make a PR batch is along those lines:
 - Go through the "Approved" PRs with a "Ready to merge" comment from a release coordinator, and open them all in tabs. Keep those tabs open through the process.
 - Make sure that those PRs are actually ready to merge (there might have been new comments/reviews made after a release coordinator approval, or new merge conflicts, etc.).
 - Make sure that each PR has the proper milestone (e.g. `4.4` if merged during the 4.4 release cycle), properly references the issues it closes with a closing keyword, and that those issues also have the corresponding milestone.
-- Copy the PR numbers of all PRs meant for a merge batch in some file, one per line.
+- Copy the PR numbers of all PRs meant for a merge batch in some file.
 - Merge them all locally with `git merge --no-ff` and a merge commit message matching what GitHub would generate (see the script below).
   **DO NOT REBASE** after this, as it would flatten the merge commits and lose the association to the original PRs.
 - Build once and run the editor to make sure no obvious bug is being introduced.
 - Push to the `master` branch.
 - Go through the now merged open tabs for each PR and thank the contributor(s) for their work.
 
-Here's a script that can be used (at least on Linux) to merge a PR locally in the same way that GitHub would do it. It depends on the [`gh` command line tool](https://cli.github.com/).
-
-```bash
-#!/bin/bash
-
-PR=$1
-VIEW=$(gh pr view $PR)
-AUTHOR=$(echo "$VIEW" | grep -m 1 "author:" | sed "s/^author:[[:space:]]*//")
-TITLE=$(echo "$VIEW" | grep -m 1 "title:" | sed "s/^title:[[:space:]]*//")
-
-BASE_BRANCH=$(git branch --show-current)
-
-gh pr checkout $PR -f
-
-PR_BRANCH=$(git branch --show-current)
-MESSAGE_TAG="$AUTHOR/$PR_BRANCH"
-if [ "$PR_BRANCH" == "$AUTHOR/$BASE_BRANCH" ]; then # master
-  MESSAGE_TAG="$PR_BRANCH"
-fi
-
-MESSAGE="Merge pull request #$PR from $MESSAGE_TAG
-
-$TITLE"
-echo -e "Merging PR with message:\n$MESSAGE"
-
-git checkout $BASE_BRANCH
-
-git merge --no-ff $PR_BRANCH -m "$MESSAGE"
-git branch -d $PR_BRANCH
-```
-
-With the above script saved as `~/.local/bin/git-local-merge` (assuming this is in your `PATH`), and a list of PR numbers to merge saved in `~/prs-to-merge`, prepare a batch with:
-
-```bash
-for pr in $(cat ~/prs-to-merge); do git-local-merge $pr; done
-```
+> [!NOTE]
+> To merge PRs locally in the same way that GitHub would do it, we use this [`git-local-merge.py`](/release-management/scripts/git-local-merge.py) Python script.
+> Make it executable and place it in the `PATH`, so that a batch of PRs can be merged with:
+>
+> ```bash
+> git-local-merge.py 100001 100002 100003 ...
+> ```
 
 ## Future work
 
