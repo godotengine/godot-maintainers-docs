@@ -38,9 +38,9 @@ As a goal, all PRs which have been approved by a maintainer should be tracked in
 
 This implies:
 
-- Making sure that PRs that get approved by maintainers get added to the merge queue project. Approved PRs that haven't yet been added to the merge queue can be found with this search: https://github.com/godotengine/godot/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc+review%3Aapproved+-project%3Agodotengine%2F90
+- Making sure that PRs that get approved by maintainers get added to the merge queue project. Approved PRs that haven't yet been added to the merge queue can be found with this search: https://github.com/godotengine/godot/issues?q=is%3Apr%20state%3Aopen%20sort%3Aupdated-desc%20review%3Aapproved%20-project%3Agodotengine%2F90%20(milestone%3A4.4%20OR%20milestone%3A4.x%20OR%20no%3Amilestone)
   * Release coordinators should make it a habit of reviewing this list daily to find newly approved PRs.
-  * TODO: The above list is specific to 4.4 (project "90") but can be adjusted if/when we switch to a new project for future releases. It also doesn't discriminate on milestone, as we're interested in PRs that may have `4.4`, `4.x`, or no milestone. Future GitHub changes should allow making complex queries with `OR` but this isn't possible yet.
+  * TODO: The above list is specific to 4.4 (project "90") but can be adjusted if/when we switch to a new project for future releases.
 - Assessing PRs added to the merge queue by other maintainers, which may not have been seen yet by release management. Currently, a lot can be found in the "Mislabeled" tab as some maintainers don't set the wave or status when adding to the merge queue. Likewise, some maintainers add unapproved PRs to the merge queue (typically their own, which they want reviewed), and that's a misuse of the project that we need to clarify.
 - Reviewing PRs ourselves as part of our daily routine, and adding them right away to the merge queue project with the right wave and status.
 - (Re)-Assessing the items in all statuses in the "Next Wave" tab regularly, to ensure that we don't miss when a PR that was close to ready is now fully ready. PRs that were put in "To Review" or "Needs Work or Consensus" which get a new maintainer review should automatically be moved to "Approved", which helps put them back in the "hot" queue.
