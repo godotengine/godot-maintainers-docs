@@ -171,7 +171,7 @@ RC channel:
 ### .NET / Mono
 
 Tracked in:
-* [.NET Issue Triage](https://github.com/orgs/godotengine/projects/83)
+* [.NET Issue Triage](https://github.com/orgs/godotengine/projects/83) (Internal tracker)
 
 RC channel:
 * [#dotnet](https://chat.godotengine.org/channel/dotnet)
