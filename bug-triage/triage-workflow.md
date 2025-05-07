@@ -136,6 +136,50 @@ Categories:
 
 These categories largely match the specific folders the classes are in.
 
+### Editor
+
+Tracked in:
+* [Editor Issue Triage](https://github.com/orgs/godotengine/projects/111)
+
+RC channel:
+* [#editor](https://chat.godotengine.org/channel/editor)
+
+Categories:
+* Docks:
+  Editor docks (Inspector, Scene etc.) and dock layout
+* 2D Editor:
+  2D editor and related features, including GUI
+* 3D Editor:
+  3D editor and related features, including gizmos
+* Shader Editor:
+  Includes visual shaders
+* Script Editor:
+  Text editing (Scripts, TextFiles)
+* Animation:
+  `AnimationPlayer`, `AnimationTree` and animation-related systems
+* Tiles:
+  `TileMapLayer` and `TileSet` editors
+* Project Export:
+  Export dialog, export process and related features
+* Project Manager:
+  Project Manager and its components
+* Plugins:
+  Related to editor plugins, both user (e.g. `EditorInterface`) and native (any plugin not covered by other categories)
+* Game View:
+  Issues relating to the embedded game view
+* AssetLib:
+  AssetLib integration with the editor
+* Debugger:
+  Related to editor/runtime interactions
+* Systems:
+  Misc editor systems not covered by other categories
+* Usability:
+  User experience, editor visuals (themes etc.)
+* File System:
+  Related to `EditorFileSystem`, cache, UIDs, previews
+* Asset Pipeline:
+  Asset import, models and materials, imported animations
+
 ### GDExtension
 
 Tracked in:
