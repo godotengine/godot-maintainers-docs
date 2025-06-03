@@ -228,6 +228,14 @@ Tracked in:
 RC channel:
 * [#networking](https://chat.godotengine.org/channel/networking)
 
+### Particles
+
+Tracked in:
+* [Particles Issue Triage](https://github.com/orgs/godotengine/projects/115)
+
+RC channel:
+* [#vfx-tech-art](https://chat.godotengine.org/channel/vfx-tech-art)
+
 ### Physics
 
 Tracked in:
