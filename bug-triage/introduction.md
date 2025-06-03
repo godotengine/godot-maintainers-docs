@@ -19,7 +19,7 @@ For more detailed instructions on the triage process in general, please see [Bug
 ### Confirming report details
 
 The most basic step of triage is to make sure an issue report is filled in properly.
-For details on what a report should contain please see [triage workflow](/bug-triage/triage-workflow.md#triage-workflow).
+For details on what a report should contain please see [triage workflow](/bug-triage/triage-workflow.md).
 
 ### Identifying duplicates
 
@@ -30,7 +30,7 @@ things down, make sure to also look at the pinned issues at the top of the issue
 missed these.
 
 Another tool that can help identifying duplicates are the team trackers, for a list of these see
-[Team Triage Trackers](/bug-triage/triage-workflow.md#team-triage-trackers).
+[Team Triage Trackers](/bug-triage/team-trackers.md).
 
 <!-- TODO: Add link to potential future searching instructions -->
 
