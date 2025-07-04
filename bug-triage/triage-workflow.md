@@ -1,6 +1,28 @@
 # Bug Triage Overview
 
-## Triage Workflow
+This is page is meant to outline in more detail the process of triaging bugs. For a basic introduction, please see the
+[introduction to triage](/bug-triage/introduction.md) page. If you have any questions, or if there's anything missing,
+please don't hesitate to ask in the [#bugsquad](https://chat.godotengine.org/channel/bugsquad) channel.
+
+## Triage Checklist
+
+* Make sure the issue is [valid](#check-issue-validity):
+  - If the issue is not filled in properly, i.e. ignores the template, ask the author to do so.
+  - If the issue is in the wrong place, direct the author to the correct place.
+  - If the issue is spam, close it.
+* Make sure the issue has all the required information, if not ask the author to add the missing information.
+* [Check for duplicates](#check-for-duplicates).
+* Check if the issue is a recent regression. If it is, add it to the [release blocker tracker](/bug-triage/release-blockers.md) and mark
+  it as a “regression”.
+* Add initial labels.
+* [Assign a milestone](#assigning-milestones) if relevant.
+* Test the issue if you are able, or ask others to test it.
+  - If you cannot replicate the issue, and it has been fixed, close the issue.
+  - If you need more details after testing it, ask the author. And add the “needs testing” and “needs work” labels as needed.
+  - If you can replicate the issue, mark it as “confirmed”.
+* Finalize the assessment, updating any labels or milestone if needed and adding it to the appropriate [team trackers](/bug-triage/team-trackers.md).
+
+## Check Issue Validity
 
 The first step of triage is to confirm that the issue is valid and filled in properly. This means that:
 * It is a bug report, for the engine, and not a:
@@ -17,33 +39,63 @@ The first step of triage is to confirm that the issue is valid and filled in pro
 If the report is missing this information, ask for this information before proceeding. If the issue lacks critical information, or is written in a way that makes it
 difficult to classify the issue, it should be tagged with “needs work”. Otherwise you can proceed and add some basic tags to the issue and add the “needs testing” tag.
 
+Issues that are clearly spam should be closed and tagged as “spam” and marked as archived.
+
+## Initial Assessment
+
 Once the basic details of the issue have been verified the issue should be tagged with the appropriate tags.
 See [bug triage guidelines](https://docs.godotengine.org/en/latest/contributing/workflow/bug_triage_guidelines.html) for details on these tags.
 
 If the bug is reported on the current development version (i.e. the `master` branch, and any pre-releases such as `4.4.beta1`) it is important to verify if it also occurs
 on a past stable release. If this information is missing from the report (i.e. the author only reports having tested development versions) please either ask the author to
 test with a stable version or test the bug yourself. If it *doesn't* occur on a past release it is considered a regression and should be tagged with the “regression” label,
-and should also be added to the “4.x Release Blockers” project. See [below](#release-blocker-tracking) for details.
-
-For pre-release versions, it's critical to identify what change caused a specific bug. **All** such regressions should be bisected.
-You can ask the issue author to follow the instructions in the
-[Bisecting regressions](https://docs.godotengine.org/en/latest/contributing/workflow/bisecting_regressions.html) documentation.
-If they are not able to (or the issue is critical and should be fixed as quickly as possible), then you can look into bisecting the issue yourself.
-
-Once identified correctly it should be put on the relevant triage project(s) if appropriate. [See below](#team-triage-trackers) for a list of triage projects.
-Functional enhancements shouldn't generally be put on the trackers (i.e. new features, not enhancements to documentation). Some teams have dedicated trackers for enhancements,
-but they aren't detailed here.
+and should also be added to the “4.x Release Blockers” project. See [release blocker tracking](/bug-triage/release-blockers.md) for details.
 
 Try to tag an issue as specifically as possible, adding “needs testing” and “needs work” if necessary. Don't worry about misidentifying issues,
 for example classifying something as a “bug” when it's actually an issue in the documentation or a missing feature.
 Maintainers for each area will double checks reports when investigating, and will change tags as necessary.
 It's more important to get an issue tagged correctly than getting it right from the start.
 
-### Testing an MRP
+## Check for Duplicates
+
+<!-- TODO -->
+
+<!-- TODO: Add page with tips and tricks for finding duplicates and using the search function effectively -->
+
+If the same bug, with the same fix, is reported in multiple versions, it is a duplicate. For example a bug reported for and fixed in `4.5`,
+which is marked for cherry-picking for `4.4` (i.e. the PR has the “cherrypick:4.4” label), should not be tracked separately for `4.4`.
+
+## Assigning Milestones
+
+Note that this is for assigning milestones to *open* issues, please see [closing an issue](#closing-an-issue) for details on closed issues and milestones.
+
+Below is an outline of the different milestones we use, but as a general rule you can assume that issues that aren't release blockers, or specific to `3.x`,
+shouldn't have milestones assigned.
+
+For the `master` branch:
+* *`4.x`*: For Godot 4 in general, i.e. the `master` branch. We do not use the `4.x` milestone on issues, issues with no milestone are assumed to
+  be relevant for the current development cycle.
+* *The current development version*: Should be assigned to issues that are [release blockers](/bug-triage/release-blockers.md), or otherwise prioritized
+  for the current version.
+* *The next release version*: When we enter feature freeze we usually create a new milestone used for PRs that are approved but won't make it into
+  the current release, this milestone is not used for issues.
+* *Older Godot 4 versions*: This is used for issues that are only relevant for this specific version (or older versions), but not any newer version.
+  An example of this would be an issue that was solved in `4.5` as part of an enhancement, but that enhancement cannot be cherry-picked for `4.4` and
+  a separate issue is necessary to track the specific solution for `4.4` (and older, if relevant). For such issues it can also be relevant to add “[4.4]” at
+  the beginning of the issue title to help clarify it is specific to this version.
+
+For Godot 3:
+* *`3.x`*: For the `3.x` branch in general. Used for issues that are only relevant for the `3.x` version, and occurs on the current development version of `3.x`.
+  For these issues it can also help to add “[3.x]” at the beginning of the issue title to help identifying the issue.
+* Other Godot 3 milestones work the same way as for the `master` branch, except we do not track release blockers for `3.x`.
+
+## Testing an Issue
 
 A valid MRP is a *minimal* project that reproduces a bug. This means that it is no larger than it needs to be, it also has to be a project, not an exported executable.
 Do _not_ run executable projects added to a bug report, they are not valid MRPs as an MRP needs to be something that can be evaluated in detail, and be tweaked if needed,
 and more importantly they are untrusted files.
+
+<!-- TODO: Add note about checking safety of tool scripts etc. -->
 
 Some bugs can be hard to verify when testing different versions (for example when bisecting) due to generated data. In this case, you might need to delete the `.godot` folder
 or any user data related to the project. See [data paths](https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html) for details on where these files are stored.
@@ -52,6 +104,27 @@ or any user data related to the project. See [data paths](https://docs.godotengi
 
 If you are unable to reproduce the bug, and the author reports using a different operating system, or using different hardware 
 (for example a different GPU manufacturer or family), please drop it in the [#bugsquad](https://chat.godotengine.org/channel/bugsquad) channel and ask for someone to test it.
+
+## Finalize Assessment
+
+For pre-release versions, it's critical to identify what change caused a specific bug. **All** such regressions should be bisected.
+You can ask the issue author to follow the instructions in the
+[Bisecting regressions](https://docs.godotengine.org/en/latest/contributing/workflow/bisecting_regressions.html) documentation.
+If they are not able to (or the issue is critical and should be fixed as quickly as possible), then you can look into bisecting the issue yourself.
+
+Once identified correctly it should be put on the relevant triage project(s) if appropriate. See [team trackers](/bug-triage/team-trackers.md) for a list of triage projects.
+Functional enhancements shouldn't generally be put on the trackers (i.e. new features, not enhancements to documentation). Some teams have dedicated trackers for enhancements,
+but they aren't detailed here.
+
+## Closing an issue
+
+Normally issues that have a linked PR are closed automatically when the linked PR is merged.[^1] Note that an issue can still be valid though it has a linked and merged PR,
+for example if the issue wasn't fully resolved by the PR. So make sure an issue is no longer relevant before closing.
+
+Issues closed as duplicates should be marked with the archived label, and the milestone should be removed if it has one. If an issue can no longer be replicated,
+it should be assigned to the milestone it was fixed in. If you can't pin down when it was fixed (for example if the report was made long ago), it should be marked as archived as well.
+
+The “needs testing” and “needs work” labels should also be removed when an issue is closed, regardless of how it was solved.
 
 ## Team Workflow
 
@@ -65,207 +138,4 @@ belongs to, it should be removed from the unrelated tracker(s). This is also a g
 If the report is missing information, please ask the author for more details. If the task of handling testing updated information can be handled by the bugsquad, this task
 can be handed over to them for verification: for example, testing an updated MRP provided by the author.
 
-## Release Blocker Tracking
-
-Release blockers have their own project, [4.x Release Blockers](https://github.com/orgs/godotengine/projects/61). This tracks issues that need to be fixed before the next release.
-These should be assigned a severity:
-* *Not Critical*: For issues that do not have to be fixed before the next release, but would be good if we can to reduce newly introduced issues.
-* *Bad*: For issues that should be fixed before the next release, but are less critical.
-* *Very bad*: Like *Bad* but worse.
-* *Release Blocker*: For issues that we absolutely need to fix before releasing. These include issues that severely hurt engine usability, breaks existing functionality, or are new features that
-  don't work. In some cases less critical bugs can be considered a release blocker if it involves new API and delaying fixing the problem means restricting the solution due to
-  compatibility issues.
-* *Immediate Blocker*: For issues that should be solved as soon as possible, rather than before release. This includes issues that make the engine completely unusable, breaks the buildsystem,
-  or are dangerous or damaging (such as security issues or privacy issues).
-
-## Team Triage Trackers
-
-### Animation
-
-Tracked in:
-* [Animation Team Issue Triage](https://github.com/orgs/godotengine/projects/74) (This tracker doesn't follow the pattern of the other ones)
-
-RC channel:
-* [#animation](https://chat.godotengine.org/channel/animation)
-
-### Asset Pipeline
-
-Tracked in:
-* [Asset Pipeline Issue Triage](https://github.com/orgs/godotengine/projects/72) (This tracker doesn't follow the pattern of the other ones)
-
-RC channel:
-* [asset-pipeline](https://chat.godotengine.org/channel/asset-pipeline)
-
-### Audio
-
-Tracked in:
-* [Audio Issue Triage](https://github.com/orgs/godotengine/projects/101)
-
-RC channel:
-* [#audio](https://chat.godotengine.org/channel/audio)
-
-### Buildsystem
-
-Tracked in:
-* [Buildsystem Issue Triage](https://github.com/orgs/godotengine/projects/53)
-
-RC channel:
-* [#buildsystem](https://chat.godotengine.org/channel/buildsystem)
-
-### Core
-
-Tracked in:
-* [Core Issue Triage](https://github.com/orgs/godotengine/projects/95)
-
-RC channel:
-* [#core](https://chat.godotengine.org/channel/core)
-
-Categories:
-* Threads
-* Math
-* String
-* Input
-* Resource
-* Templates
-* Debugger
-* Variant
-* Main
-* Viewport
-* IO
-* Object/ClassDB
-
-These categories largely match the specific folders the classes are in.
-
-### Editor
-
-Tracked in:
-* [Editor Issue Triage](https://github.com/orgs/godotengine/projects/111)
-
-RC channel:
-* [#editor](https://chat.godotengine.org/channel/editor)
-
-Categories:
-* Docks:
-  Editor docks (Inspector, Scene etc.) and dock layout
-* 2D Editor:
-  2D editor and related features, including GUI
-* 3D Editor:
-  3D editor and related features, including gizmos
-* Shader Editor:
-  Includes visual shaders
-* Script Editor:
-  Text editing (Scripts, TextFiles)
-* Animation:
-  `AnimationPlayer`, `AnimationTree` and animation-related systems
-* Tiles:
-  `TileMapLayer` and `TileSet` editors
-* Project Export:
-  Export dialog, export process and related features
-* Project Manager:
-  Project Manager and its components
-* Plugins:
-  Related to editor plugins, both user (e.g. `EditorInterface`) and native (any plugin not covered by other categories)
-* Game View:
-  Issues relating to the embedded game view
-* AssetLib:
-  AssetLib integration with the editor
-* Debugger:
-  Related to editor/runtime interactions
-* Systems:
-  Misc editor systems not covered by other categories
-* Usability:
-  User experience, editor visuals (themes etc.)
-* File System:
-  Related to `EditorFileSystem`, cache, UIDs, previews
-* Asset Pipeline:
-  Asset import, models and materials, imported animations
-
-### GDExtension
-
-Tracked in:
-* [GDExtension Issue Triage](https://github.com/orgs/godotengine/projects/81/views/1)
-
-RC Channel:
-* [#gdextension](https://chat.godotengine.org/channel/gdextension)
-
-### GDScript
-
-Tracked in:
-* [GDScript Issue Triage](https://github.com/orgs/godotengine/projects/79)
-
-RC channel:
-* [#gdscript](https://chat.godotengine.org/channel/gdscript)
-
-### GUI
-
-Tracked in:
-* [GUI Issue Triage](https://github.com/orgs/godotengine/projects/100)
-
-RC channel:
-* [#gui](https://chat.godotengine.org/channel/gui)
-
-### Navigation
-
-Tracked in:
-* [Navigation Issue Triage](https://github.com/orgs/godotengine/projects/103)
-
-RC channel:
-* [#navigation](https://chat.godotengine.org/channel/navigation)
-
-### .NET / Mono
-
-Tracked in:
-* [.NET Issue Triage](https://github.com/orgs/godotengine/projects/83) (Internal tracker)
-
-RC channel:
-* [#dotnet](https://chat.godotengine.org/channel/dotnet)
-
-### Network
-
-Tracked in:
-* [Network Issue Triage](https://github.com/orgs/godotengine/projects/96)
-
-RC channel:
-* [#networking](https://chat.godotengine.org/channel/networking)
-
-### Particles
-
-Tracked in:
-* [Particles Issue Triage](https://github.com/orgs/godotengine/projects/115)
-
-RC channel:
-* [#vfx-tech-art](https://chat.godotengine.org/channel/vfx-tech-art)
-
-### Physics
-
-Tracked in:
-* [Physics Issue Triage](https://github.com/orgs/godotengine/projects/102)
-
-RC channel:
-* [#physics](https://chat.godotengine.org/channel/physics)
-
-### Platforms
-
-Tracked in:
-* [Platforms Issue Triage](https://github.com/orgs/godotengine/projects/84)
-
-RC channel:
-* [#platforms](https://chat.godotengine.org/channel/platforms)
-
-Has a "Platform" field for each platform type to fill in.
-
-### Rendering
-
-Tracked in:
-* [Rendering Issue Triage](https://github.com/orgs/godotengine/projects/78)
-
-RC channel:
-* [#rendering](https://chat.godotengine.org/channel/rendering)
-
-### XR
-
-Tracked in:
-* [XR Issue Triage](https://github.com/orgs/godotengine/projects/104)
-
-RC channel:
-* [#xr](https://chat.godotengine.org/channel/xr)
+[^1]: This is limited to PRs on the `master` branch, for other cases issues have to be closed manually. This is usually handled by the production team.
