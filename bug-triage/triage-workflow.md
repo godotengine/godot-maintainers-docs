@@ -44,7 +44,7 @@ Issues that are clearly spam should be closed and tagged as “spam” and marke
 ## Initial Assessment
 
 Once the basic details of the issue have been verified the issue should be tagged with the appropriate tags.
-See [bug triage guidelines](https://docs.godotengine.org/en/latest/contributing/workflow/bug_triage_guidelines.html) for details on these tags.
+See [bug triage guidelines](https://contributing.godotengine.org/en/latest/triage/guidelines.html) for details on these tags.
 
 If the bug is reported on the current development version (i.e. the `master` branch, and any pre-releases such as `4.4.beta1`) it is important to verify if it also occurs
 on a past stable release. If this information is missing from the report (i.e. the author only reports having tested development versions) please either ask the author to
@@ -109,7 +109,7 @@ If you are unable to reproduce the bug, and the author reports using a different
 
 For pre-release versions, it's critical to identify what change caused a specific bug. **All** such regressions should be bisected.
 You can ask the issue author to follow the instructions in the
-[Bisecting regressions](https://docs.godotengine.org/en/latest/contributing/workflow/bisecting_regressions.html) documentation.
+[Bisecting regressions](https://contributing.godotengine.org/en/latest/reporting_issues/bisecting.html) documentation.
 If they are not able to (or the issue is critical and should be fixed as quickly as possible), then you can look into bisecting the issue yourself.
 
 Once identified correctly it should be put on the relevant triage project(s) if appropriate. See [team trackers](/bug-triage/team-trackers.md) for a list of triage projects.
