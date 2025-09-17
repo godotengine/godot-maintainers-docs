@@ -21,7 +21,7 @@ Some GitHub labels aren't neatly covered by trackers, below is a list of teams a
   - [godotengine/tests](https://github.com/godotengine/godot/pulls?q=is%3Apr+is%3Aopen+team-review-requested%3Agodotengine%2Ftests)
   - `topic:tests` [issues](https://github.com/godotengine/godot/issues?q=is%3Aissue%20state%3Aopen%20label%3Atopic%3Atests) [PRs](https://github.com/godotengine/godot/pulls?q=is%3Apr+is%3Aopen+label%3Atopic%3Atests)
 
-For more information about the different GitHub labels, please see the [labels documentation](https://docs.godotengine.org/en/latest/contributing/workflow/bug_triage_guidelines.html#labels).
+For more information about the different GitHub labels, please see the [labels documentation](https://contributing.godotengine.org/en/latest/triage/guidelines.html#labels).
 
 <!-- TODO: Consider using a table -->
 
