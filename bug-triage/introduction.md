@@ -64,7 +64,7 @@ Bisecting can be done at multiple levels, the basic level is checking if, for ex
 confirmed on `4.4` is also reproducible on `4.3`. Next you can test development releases, such as `4.4.beta1`,
 these can be found in the [Godot archive](https://godotengine.org/download/archive/).
 Once the specific development release has been identified you can go one step further and
-[bisect](https://docs.godotengine.org/en/latest/contributing/workflow/bisecting_regressions.html) the regression.
+[bisect](https://contributing.godotengine.org/en/latest/reporting_issues/bisecting.html) the regression.
 
 Make sure to announce the fact that you are bisecting a bug on the issue report to make sure no one else starts
 bisecting it as well, as bisecting can take some time.
