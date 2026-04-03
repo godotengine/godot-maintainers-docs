@@ -6,9 +6,7 @@ if __name__ != "__main__":
 
 import argparse
 import json
-import os
 import shutil
-import signal
 import subprocess
 import sys
 from typing import NoReturn
@@ -45,20 +43,26 @@ Merge pull request #{id} from {branch}
 def main() -> NoReturn:
     parser = argparse.ArgumentParser(prog="git-local-merge", description="Locally merge multiple GitHub PRs.")
     parser.add_argument("ids", nargs="*", help="PR ids to merge.", type=int)
-    parser.add_argument(
-        "-f",
-        "--file",
-        help="Path to a file containing PR ids.",
-        type=argparse.FileType(encoding="utf-8"),
-    )
+    parser.add_argument("-f", "--file", help="Path to a file containing newline-separated PR ids.")
     args = parser.parse_args()
 
-    ids: set[int] = set(args.ids)
+    ids: list[int] = []
+    for id in args.ids:
+        if id in ids:
+            parser.error(f'Duplicate id passed in command line: "{id}".')
+        ids.append(id)
     if args.file:
-        try:
-            ids.update(int(id) for id in args.file.read().split())
-        except ValueError:
-            parser.error("File contained invalid int values.")
+        with open(args.file, encoding="utf-8", newline="\n") as file:
+            for line in file:
+                if not line:
+                    continue
+                try:
+                    id = int(line)
+                except ValueError:
+                    parser.error(f'Invalid int passed in file: "{line}"')
+                if id in ids:
+                    parser.error(f'Duplicate id passed in file: "{id}".')
+                ids.append(id)
     if not ids:
         parser.error("No ids provided.")
 
@@ -116,5 +120,8 @@ def main() -> NoReturn:
 try:
     main()
 except KeyboardInterrupt:
+    import os
+    import signal
+
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     os.kill(os.getpid(), signal.SIGINT)
