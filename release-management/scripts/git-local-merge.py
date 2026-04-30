@@ -75,6 +75,9 @@ def main() -> NoReturn:
     BASE_BRANCH = subprocess.run(
         ["git", "branch", "--show-current"], capture_output=True, encoding="utf-8"
     ).stdout.strip()
+    BASE_SHA = subprocess.run(
+        ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
+    ).stdout.strip()
 
     if not shutil.which("gh"):
         print(
@@ -127,6 +130,17 @@ def main() -> NoReturn:
 
     if len(failed):
         print(f"Failed to merge: {failed}.")
+
+    if not shutil.which("pre-commit"):
+        print("pre-commit not detected! Skipping post-run validation...", file=sys.stderr)
+    else:
+        CURRENT_SHA = subprocess.run(
+        ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
+        ).stdout.strip()
+        out = subprocess.run(["pre-commit", "run", "--from-ref", BASE_SHA, "--to-ref", CURRENT_SHA, "--color=always"])
+        if out.returncode != 0:
+            return out.returncode
+
     sys.exit(len(failed))
 
 
