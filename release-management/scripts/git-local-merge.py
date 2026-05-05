@@ -75,9 +75,7 @@ def main() -> NoReturn:
     BASE_BRANCH = subprocess.run(
         ["git", "branch", "--show-current"], capture_output=True, encoding="utf-8"
     ).stdout.strip()
-    BASE_SHA = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
-    ).stdout.strip()
+    BASE_SHA = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8").stdout.strip()
 
     if not shutil.which("gh"):
         print(
@@ -118,10 +116,13 @@ def main() -> NoReturn:
         sys.exit(len(failed))
 
     for pr in prs:
+        print()
         subprocess.run(["gh", "pr", "checkout", str(pr.id), "--branch", pr.branch, "--force"])
+    print()
     subprocess.run(["git", "checkout", BASE_BRANCH])
 
     for pr in prs:
+        print()
         out = subprocess.run(["git", "merge", "--no-ff", pr.branch, "-m", pr.message()])
         if out.returncode != 0:
             subprocess.run(["git", "merge", "--abort"])
@@ -129,17 +130,17 @@ def main() -> NoReturn:
         subprocess.run(["git", "branch", "--delete", "--force", pr.branch])
 
     if len(failed):
+        print()
         print(f"Failed to merge: {failed}.")
 
-    if not shutil.which("pre-commit"):
-        print("pre-commit not detected! Skipping post-run validation...", file=sys.stderr)
+    if not shutil.which("prek"):
+        print("prek not detected! Skipping post-run validation...", file=sys.stderr)
     else:
-        CURRENT_SHA = subprocess.run(
-        ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
-        ).stdout.strip()
-        out = subprocess.run(["pre-commit", "run", "--from-ref", BASE_SHA, "--to-ref", CURRENT_SHA, "--color=always"])
+        print()
+        CURRENT_SHA = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8").stdout.strip()
+        out = subprocess.run(["prek", "run", "--from-ref", BASE_SHA, "--to-ref", CURRENT_SHA, "--color=always"])
         if out.returncode != 0:
-            return out.returncode
+            sys.exit(out.returncode)
 
     sys.exit(len(failed))
 
