@@ -94,7 +94,7 @@ def main() -> NoReturn:
             print("Failed to setup default remote repository!", file=sys.stderr)
             sys.exit(1)
 
-    failed: set[int] = set()
+    failed: list[int] = []
     prs: list[PullRequestInfo] = []
 
     for id in ids:
@@ -103,16 +103,52 @@ def main() -> NoReturn:
             prs.append(pr)
         else:
             print(f"id #{id} does not correspond to a PR!", file=sys.stderr)
-            failed.add(id)
+            failed.append(id)
 
     if args.cherry_pick:
-        for pr in prs:
-            out = subprocess.run(["git", "cherry-pick", "-x", *pr.commits])
-            if out.returncode != 0:
-                subprocess.run(["git", "cherry-pick", "--abort"])
-                failed.add(pr.id)
+        for idx, pr in enumerate(prs, 1):
+            print()
+            print(f"[{idx:3d}/{len(prs):3d}] {pr.id}: {pr.title}")
+            out = subprocess.run(["git", "cherry-pick", "-x", *pr.commits], capture_output=True, encoding="utf-8")
+            loop = True
+            while loop:
+                if out.returncode == 0:  # Success.
+                    print("Success!")
+                    loop = False
+                elif out.returncode == 1:  # Merge conflicts.
+                    choice = input("Merge conflicts detected. Either resolve manually then continue (y) or skip (n): ").lower()
+                    if choice in ['y', 'yes']:  # Attempt to resolve.
+                        subprocess.run(["git", "add", "."], capture_output=True)
+                        out = subprocess.run(
+                            ["git", "cherry-pick", "--continue"], capture_output=True, encoding="utf-8"
+                        )
+                    elif choice in ['n', 'no']:  # Abort early.
+                        loop = False
+                        print("Aborting...")
+                        subprocess.run(["git", "cherry-pick", "--abort"], capture_output=True)
+                        failed.append(pr.id)
+                    else:
+                        print("Invalid input. Please enter 'y' or 'n'.")
+                else:  # Unrelated error.
+                    loop = False
+                    print(f"Cherry-pick failed from unrelated error: {out.stderr.strip()}")
+                    subprocess.run(["git", "cherry-pick", "--abort"], capture_output=True)
+                    failed.append(pr.id)
+
         if len(failed):
+            print()
             print(f"Failed to cherry-pick: {failed}.")
+
+        if not shutil.which("prek"):
+            print()
+            print("prek not detected! Skipping post-run validation...", file=sys.stderr)
+        else:
+            print()
+            CURRENT_SHA = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8").stdout.strip()
+            out = subprocess.run(["prek", "run", "--from-ref", BASE_SHA, "--to-ref", CURRENT_SHA, "--color=always"])
+            if out.returncode != 0:
+                sys.exit(out.returncode)
+
         sys.exit(len(failed))
 
     for pr in prs:
@@ -126,7 +162,7 @@ def main() -> NoReturn:
         out = subprocess.run(["git", "merge", "--no-ff", pr.branch, "-m", pr.message()])
         if out.returncode != 0:
             subprocess.run(["git", "merge", "--abort"])
-            failed.add(pr.id)
+            failed.append(pr.id)
         subprocess.run(["git", "branch", "--delete", "--force", pr.branch])
 
     if len(failed):
@@ -134,6 +170,7 @@ def main() -> NoReturn:
         print(f"Failed to merge: {failed}.")
 
     if not shutil.which("prek"):
+        print()
         print("prek not detected! Skipping post-run validation...", file=sys.stderr)
     else:
         print()
